@@ -5,13 +5,12 @@ const btnSend = document.querySelector("#btnSend");
 const btnShow = document.querySelector("#btnShow");
 const saida = document.querySelector("#saida");
 
-btnSend.addEventListener("click", (e) => {
+btnSend.addEventListener("click", () => {
 
   adicionaDados();
 });
 
-btnShow.addEventListener("click", (e) => {
-  e.preventDefault();
+btnShow.addEventListener("click", () => {
 
   lerDados();
 })
@@ -38,22 +37,28 @@ function adicionaDados() {
         nome.value = '';
         comentario.value = '';
       }).catch((error) => {
-        console.log(error);
-      })
-  })
+        console.log("Ocorreu um erro: " + error);
+      });
+  });
 }
 
 function lerDados() {
-  fetch('recebe.php')
-    .then((request) => request.json())
-    .then((response) => {
-      response.forEach(element => {
-        let item = document.createElement("h2");
-        item.innerHTML = "<p>"+element.names+"</p> <p>"+element.comments+"</p>";
+  formulario.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-        saida.appendChild(item);
+    fetch('recebe.php')
+      .then((request) => request.json())
+      .then((response) => {
+        response.forEach(element => {
+
+          let item = document.createElement("h2");
+
+          item.innerHTML = "<hr><p>" + element.names + "</p> <p>" + element.comments + "</p>";
+          saida.appendChild(item);
+        });
+      }).catch((error) => {
+        console.log(`Whoops, ocorreu um erro: ${error}`);
       });
-    }).catch((error) => {
-      console.log(`Whoops, ocorreu um erro: ${error}`);
-    });
+  })
+
 }
